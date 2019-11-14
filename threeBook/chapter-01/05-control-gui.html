@@ -5,6 +5,7 @@
 <head>
   <title>Example 01.02 - First Scene</title>
   <script type="text/javascript" src="../../lib/three.js"></script>
+  <script type="text/javascript" src="../../lib/dat.gui.js"></script>
   <style>
     body {
       /* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -24,6 +25,14 @@
     function init(params) {
       // scene
        let scene = new THREE.Scene();
+      let controls = new function () {
+        this.rotationSpeed = 0.02;
+        this.bouncingSpeed = 0.03;
+      }
+
+      let gui = new dat.GUI();
+      gui.add(controls, 'rotationSpeed', 0, 0.5);
+      gui.add(controls, 'bouncingSpeed', 0, 0.5);
 
       // renderer
       let renderer = new THREE.WebGLRenderer();
@@ -87,9 +96,9 @@
       
       let step = 0;
       function renderScene() {
-        step +=0.04;
+        step += controls.bouncingSpeed;
         // cube.position.x += 0.1
-        cube.rotation.x += 0.2;
+        cube.rotation.x += controls.rotationSpeed;
         // cube.rotation.y += 0.2;
         // cube.rotation.z += 0.2;
         sphere.position.x = 20 + (10 * Math.cos(step));
@@ -100,6 +109,13 @@
 
       }
 
+      function onResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      window.addEventListener('resize', onResize, false);
       renderScene(); 
     }
    
